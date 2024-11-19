@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { sendForgotPasswordEmail } from "../../helpers/helper.js";
+import { sendForgotPasswordEmail } from "../../helpers/helper";
 
 const email = ref("");
 const errorMessage = ref<string | null>(null);

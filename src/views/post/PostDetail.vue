@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h1 class="post-title display-4 text-primary gradient-text">{{ post.title }}</h1>
-                        <div class="dropdown" v-if="user.user.id == post.authorId || user.user.role == 'admin'">
+                        <div class="dropdown" v-if="user.user._id == post.authorId || user.user.role == 'admin'">
                             <button class="btn btn-secondary dropdown-toggle btn-hover" type="button"
                                 id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 Options
@@ -83,12 +83,12 @@
                             <p class="comment-content">{{ comment.content }}</p>
                             <p class="comment-date text-muted">{{ new Date(comment.createdAt).toLocaleString() }}</p>
                             <div class="comment-actions">
-                                <button v-if="comment.userId == user.user.id || user.user.role == 'admin'"
+                                <button v-if="comment.userId == user.user._id || user.user.role == 'admin'"
                                     class="btn btn-outline-primary btn-sm me-2 btn-hover"
                                     @click="startEditComment(comment.id, comment.content)">
                                     Edit
                                 </button>
-                                <button v-if="comment.userId == user.user.id || user.user.role == 'admin'"
+                                <button v-if="comment.userId == user.user._id || user.user.role == 'admin'"
                                     class="btn btn-outline-danger btn-sm btn-hover" @click="deleteComment(comment.id)">
                                     Delete
                                 </button>

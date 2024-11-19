@@ -256,7 +256,7 @@ export default defineComponent({
     const postsStore = usePostsStore()
     const userStore = useAuthStore()
     const notificationsStore = useNotificationsStore()
-    const userId = userStore.userDetail.user.id
+    const userId = userStore.userDetail.user._id
     const notification = ref<string | null>(null)
     const notificationType = ref<string>('info') // Default notification type
 
@@ -288,19 +288,19 @@ export default defineComponent({
     postsStore.getAllPost()
 
     const isPostLiked = (post: Post) => {
-      return post.likedBy?.includes(userStore.user.user.id) || false
+      return post.likedBy?.includes(userStore.user.user._id) || false
     }
 
     const toggleLike = async (post: Post) => {
       if (isPostLiked(post)) {
         const result = await postsStore.unlikePost(post.id)
         if (result) {
-          post.likedBy = post.likedBy?.filter((id) => id !== userStore.user.user.id) || []
+          post.likedBy = post.likedBy?.filter((id) => id !== userStore.user.user._id) || []
         }
       } else {
         const result = await postsStore.likePost(post.id)
         if (result) {
-          post.likedBy = [...(post.likedBy || []), userStore.user.user.id]
+          post.likedBy = [...(post.likedBy || []), userStore.user.user._id]
         }
       }
     }

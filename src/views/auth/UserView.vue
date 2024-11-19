@@ -318,7 +318,7 @@ const postStore = usePostsStore();
 const route = useRoute();
 
 const userId = computed(() => route.params.id as string);
-const userIdIsLogged = computed(() => authStore.user.user?.id);
+const userIdIsLogged = computed(() => authStore.user.user?._id);
 const userPosts = ref<Post[]>([]);
 const loading = ref(true);
 const showChatBox = ref(false);

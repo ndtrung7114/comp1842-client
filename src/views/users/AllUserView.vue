@@ -79,7 +79,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in filteredUsers" :key="user.id">
+              <tr v-for="user in filteredUsers" :key="user._id">
                 <td>
                   <div class="d-flex align-items-center">
                     <img

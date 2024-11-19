@@ -4,7 +4,7 @@ import { socket } from '@/plugins/socket' // Import the socket instance
 
 export interface User {
   user: {
-    id: string
+    _id: string
     username: string
     profile: {
       facebook: string
@@ -107,9 +107,9 @@ export const useAuthStore = defineStore('auth', {
         this.accessToken = data.access_token
         await this.getUser()
         // Emit 'register' event with user ID after successful login and data load
-        if (this.user.user?.id) {
-          socket.emit('register', this.user.user.id.toString())
-          console.log('User registered with ID:', this.user.user.id)
+        if (this.user.user?._id) {
+          socket.emit('register', this.user.user._id.toString())
+          console.log('User registered with ID:', this.user.user._id)
         }
         return data
       } catch (error: Error | any) {
@@ -190,7 +190,7 @@ export const useAuthStore = defineStore('auth', {
 
         if (response.data) {
           // Ensure we're updating with the correct structure
-          if (this.user?.user?.id === userId) {
+          if (this.user?.user?._id === userId) {
             // Update current user state
             this.user = {
               user: {

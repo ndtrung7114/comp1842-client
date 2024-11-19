@@ -145,7 +145,7 @@ const handleSend = async () => {
     
     // Create FormData
     const formData = new FormData();
-    formData.append('sender', authStore.user.user.id);
+    formData.append('sender', authStore.user.user._id);
     formData.append('recipient', props.recipientId);
     formData.append('content', message.value);
     

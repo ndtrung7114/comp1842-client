@@ -141,7 +141,7 @@ export default {
         const messageDetails = ref<Message[]>([])
         const selectedUser = ref<null | conversations>(null)
         const messageContent = ref<string>('')
-        const userId = authStore.userDetail.user?.id
+        const userId = authStore.userDetail.user?._id
 
 
         const images = ref<File[]>([]);
