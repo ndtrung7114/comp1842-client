@@ -111,26 +111,46 @@ const router = createRouter({
 
 router.beforeResolve(async (to, from, next) => {
   const authStore = useAuthStore();
-
-  // Check if the route requires authentication
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    return next({ name: 'login', query: { redirect: to.fullPath } });
+  
+  // Add a flag to prevent infinite loops
+  if (to.path === '/login' && authStore.isAuthenticated) {
+    return next({ name: 'home' });
   }
 
-  // Check if the route is restricted to guests
+  // Handle authentication required routes
+  if (to.meta.requiresAuth) {
+    try {
+      if (!authStore.isAuthenticated) {
+        // Store the intended destination
+        return next({ 
+          name: 'login', 
+          query: { redirect: to.fullPath },
+          replace: true  // Use replace instead of push to avoid browser history issues
+        });
+      }
+      return next();
+    } catch (error) {
+      console.error('Auth check error:', error);
+      return next({ 
+        name: 'login',
+        replace: true
+      });
+    }
+  }
+
+  // Handle guest-only routes
   if (to.meta.requiresGuest && authStore.isAuthenticated) {
     return next({ name: 'home' });
   }
 
   // Special condition for update-password route
   if (to.name === 'update-password') {
-    const userId = authStore.user.user._id; // Get the logged-in user's ID
-    const userRole = authStore.user.user.role; // Get the logged-in user's role
-    const routeId = to.params.id; // Get the ID from the route
+    const userId = authStore.user?.user?._id;
+    const userRole = authStore.user?.user?.role;
+    const routeId = to.params.id;
 
-    // Allow access only if the user ID matches or the role is admin
     if (userId !== routeId && userRole !== 'admin') {
-      return next({ name: 'home' }); // Redirect to home or an error page
+      return next({ name: 'home' });
     }
   }
 

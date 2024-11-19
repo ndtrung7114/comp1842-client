@@ -19,7 +19,7 @@ export const axiosPrivateInstance = axios.create({
   }
 })
 
-// Add interceptor to handle token refresh
+//  interceptor to handle token refresh
 axiosPrivateInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
