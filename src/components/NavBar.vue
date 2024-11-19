@@ -183,7 +183,7 @@
               <ul class="dropdown-menu dropdown-menu-end profile-dropdown">
                 <li>
                   <router-link
-                    :to="{ name: 'user', params: { id: user.user.id } }"
+                    :to="{ name: 'user', params: { id: user.user._id } }"
                     class="dropdown-item"
                   >
                     <i class="fas fa-user me-2"></i> Profile
