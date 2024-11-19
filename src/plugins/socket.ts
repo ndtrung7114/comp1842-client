@@ -7,7 +7,7 @@ import { useMessageStore } from '@/stores/message';
 import { watch } from 'vue';
 
 
-export const socket = io('http://localhost:3500', {
+export const socket = io('https://greenwichsocial.onrender.com', {
   withCredentials: true,
   autoConnect: true,
   transports: ['polling', 'websocket']
