@@ -165,7 +165,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   setup() {
-    const BASE_URL = 'http://localhost:3500'; // Update with your API URL
+    const BASE_URL = import.meta.env.VITE_API_URI as string; // Update with your API URL
     const postsStore = usePostsStore();
     const route = useRoute();
     const router = useRouter();

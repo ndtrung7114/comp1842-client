@@ -151,7 +151,7 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '../../stores/auth'
 import { useRouter } from 'vue-router'
 import type { User } from '../../stores/auth'
-const BASE_URL = 'http://localhost:3500'
+const BASE_URL = import.meta.env.VITE_API_URI as string
 
 export default defineComponent({
   name: 'AllUserView',

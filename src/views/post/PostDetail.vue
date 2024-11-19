@@ -144,7 +144,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
     setup() {
-        const BASE_URL = 'http://localhost:3500';
+        const BASE_URL = import.meta.env.VITE_API_URI as string;
         const authStore = useAuthStore();
         const postsStore = usePostsStore();
         const commentsStore = useCommentsStore();
