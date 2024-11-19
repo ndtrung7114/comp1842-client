@@ -124,7 +124,7 @@ router.beforeResolve(async (to, from, next) => {
 
   // Special condition for update-password route
   if (to.name === 'update-password') {
-    const userId = authStore.user.user.id; // Get the logged-in user's ID
+    const userId = authStore.user.user._id; // Get the logged-in user's ID
     const userRole = authStore.user.user.role; // Get the logged-in user's role
     const routeId = to.params.id; // Get the ID from the route
 

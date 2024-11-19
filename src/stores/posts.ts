@@ -55,7 +55,7 @@ export const usePostsStore = defineStore('posts', {
             this.error = null;
             try {
                 const { data } = await useApi().get('/api/post/');
-                const userId = useAuthStore().userDetail.user.id;
+                const userId = useAuthStore().userDetail.user._id;
 
                 // Map the fetched posts to match the expected structure
                 this.posts = await Promise.all(data.posts.map(async (post: any) => {

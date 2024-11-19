@@ -41,7 +41,7 @@ export const socketPlugin = {
     
 
       // Check if the current user is the recipient
-      if (message.recipient === authStore.user.user?.id) {
+      if (message.recipient === authStore.user.user?._id) {
 
         messageStore.incrementUnreadCount(message.sender);
         // Create a new notification
@@ -74,7 +74,7 @@ export const socketPlugin = {
 
     // Watch for user login status to emit register
     watch(
-      () => authStore.user.user?.id,
+      () => authStore.user.user?._id,
       (userId) => {
         if (userId) {
           socket.emit("register", userId.toString());
@@ -90,9 +90,9 @@ export const socketPlugin = {
         
         // Register user if they are logged in when the socket connects
    
-      if (authStore.user.user?.id) {
-        socket.emit("register", authStore.user.user.id.toString());
-        console.log("User registered with ID:", authStore.user.user.id);
+      if (authStore.user.user?._id) {
+        socket.emit("register", authStore.user.user._id.toString());
+        console.log("User registered with ID:", authStore.user.user._id);
       }
 
         
