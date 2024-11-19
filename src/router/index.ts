@@ -109,7 +109,7 @@ const router = createRouter({
   ]
 })
 
-router.beforeResolve(async (to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   
   // Add a flag to prevent infinite loops
