@@ -12,6 +12,7 @@ export interface Comment {
     likeCount?: number;
     createdAt: string;
     updatedAt: string;
+    avatar?: string;
 }
 
 export interface State {
@@ -48,6 +49,7 @@ export const useCommentsStore = defineStore('comments', {
                     content: comment.content,
                     createdAt: comment.createdAt,
                     updatedAt: comment.updatedAt,
+                    avatar: comment.user.profile.avatar,
                 }));
                
             } catch (error: any) {

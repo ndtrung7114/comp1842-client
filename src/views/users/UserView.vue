@@ -16,7 +16,7 @@
           <div class="position-relative">
             <div class="bg-primary" style="height: 150px;"></div>
             <div class="position-absolute w-100 d-flex justify-content-center" style="bottom: -50px;">
-              <img :src="BASE_URL + userView.userView.profile?.avatar || 'https://via.placeholder.com/150'"
+              <img :src=" userView.userView.profile?.avatar || 'https://via.placeholder.com/150'"
                 class="rounded-circle border border-4 border-white shadow-sm" alt="Profile Avatar"
                 style="width: 100px; height: 100px; object-fit: cover;" />
             </div>
@@ -126,7 +126,7 @@
                             <div class="carousel-inner">
                               <div v-for="(imageUrl, index) in post.imageUrls" :key="index" class="carousel-item"
                                 :class="{ active: index === 0 }">
-                                <img :src="BASE_URL + imageUrl" class="d-block w-100" alt="Post Image"
+                                <img :src=" imageUrl" class="d-block w-100" alt="Post Image"
                                   style="height: 200px; object-fit: cover;" />
                               </div>
                             </div>
@@ -195,7 +195,7 @@
                     <!-- Only show if post has images -->
                     <div v-if="post.imageUrls && post.imageUrls.length > 0" class="position-relative media-item">
                       <div class="ratio ratio-1x1">
-                        <img :src="BASE_URL + post.imageUrls[0]" class="img-fluid rounded object-fit-cover"
+                        <img :src=" post.imageUrls[0]" class="img-fluid rounded object-fit-cover"
                           alt="Gallery image" @click="openLightbox(post.imageUrls, post.id)" />
                       </div>
                       <!-- Multiple images indicator -->
@@ -220,7 +220,7 @@
                       <div class="position-relative d-inline-block">
                         <img
                           :src="avatarPreview ||
-                            (userView.userView.profile?.avatar ? BASE_URL + userView.userView.profile.avatar : 'https://via.placeholder.com/150')"
+                            (userView.userView.profile?.avatar ?  userView.userView.profile.avatar : 'https://via.placeholder.com/150')"
                           class="rounded-circle border border-4 border-white shadow-sm" alt="Profile Avatar"
                           style="width: 150px; height: 150px; object-fit: cover;" />
                         <label for="avatar-upload"
@@ -297,10 +297,15 @@
       </div>
     </div>
   </div>
+  <Notification
+      v-if="notification"
+      :message="notification"
+      :notificationType="notificationType"
+    />
 
   <ChatBox v-model="showChatBox" :recipient-id="userId"
     :recipient-name="`${userView.userView?.first_name} ${userView.userView?.last_name}`"
-    :recipient-avatar="userView.userView?.profile?.avatar ? BASE_URL + userView.userView.profile.avatar : undefined"
+    :recipient-avatar="userView.userView?.profile?.avatar ?  userView.userView.profile.avatar : undefined"
     @message-sent="handleMessageSent" />
 </template>
 
@@ -310,9 +315,13 @@ import { usePostsStore } from '@/stores/posts';
 import { computed, onMounted, ref, watch, reactive } from 'vue';
 import type { Post } from '@/stores/posts';
 import { useRoute } from 'vue-router';
-import ChatBox from '../../components/ChatBox.vue';
+import ChatBox from '../message/ChatBox.vue';
+const notificationsStore = useNotificationsStore()
+import { useNotificationsStore } from '@/stores/notifications'
+import Notification from '../../components/Notification.vue'
 
-const BASE_URL = import.meta.env.VITE_API_URI as string;
+const notification = ref<string | null>(null)
+const notificationType = ref<string>('info') // Default notification type
 const authStore = useAuthStore();
 const postStore = usePostsStore();
 const route = useRoute();
@@ -401,6 +410,23 @@ watch(userView, (newValue) => {
     };
   }
 }, { immediate: true });
+
+watch(
+      () => notificationsStore.notifications,
+      (newNotifications) => {
+        if (newNotifications.length > 0) {
+          const latestNotification = newNotifications[newNotifications.length - 1]
+          notification.value = latestNotification.message
+          notificationType.value = latestNotification.type
+
+          // Clear notification after 3 seconds
+          setTimeout(() => {
+            notification.value = null
+          }, 2000)
+        }
+      },
+      { deep: true }
+    )
 
 // Type guard to check if a string is a valid field name
 function isValidField(field: string): field is ProfileFormField {
@@ -563,58 +589,7 @@ onMounted(() => {
 });
 </script>
 
+
 <style scoped>
-/* Styles remain unchanged */
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.hover-shadow {
-  transition: all 0.3s ease;
-}
-
-.hover-shadow:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
-}
-
-.transition {
-  transition: all 0.3s ease;
-}
-
-.nav-tabs .nav-link {
-  color: #6c757d;
-  border: none;
-  padding: 1rem 1.5rem;
-  font-weight: 500;
-}
-
-.nav-tabs .nav-link.active {
-  color: #0d6efd;
-  border-bottom: 2px solid #0d6efd;
-  background: none;
-}
-
-.ratio-1x1 {
-  aspect-ratio: 1;
-}
-
-.object-fit-cover {
-  object-fit: cover;
-}
-
-.media-item {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.media-item:hover {
-  opacity: 0.9;
-}
-
-.carousel-item img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
+@import "../../assets/style/user/UserView.css";
 </style>

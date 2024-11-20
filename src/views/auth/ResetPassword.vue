@@ -17,26 +17,17 @@
               <div class="mb-4">
                 <label class="form-label">New Password</label>
                 <div class="input-group">
-                  <input 
-                    :type="showNewPassword ? 'text' : 'password'"
-                    v-model="newPassword"
-                    class="form-control"
+                  <input :type="showNewPassword ? 'text' : 'password'" v-model="newPassword" class="form-control"
                     :class="{ 'is-invalid': v$.newPassword.$error || passwordMismatch }"
-                    placeholder="Enter your new password"
-                    @input="checkPasswordStrength"
-                  >
-                  <button 
-                    class="btn btn-outline-secondary" 
-                    type="button"
-                    @click="showNewPassword = !showNewPassword"
-                  >
+                    placeholder="Enter your new password" @input="checkPasswordStrength">
+                  <button class="btn btn-outline-secondary" type="button" @click="showNewPassword = !showNewPassword">
                     <i :class="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                   </button>
                 </div>
                 <div class="invalid-feedback" v-if="v$.newPassword.$error">
                   {{ v$.newPassword.$errors[0].$message }}
                 </div>
-                
+
                 <!-- Password Strength Indicator -->
                 <div class="mt-2">
                   <div class="d-flex justify-content-between mb-1">
@@ -44,13 +35,10 @@
                     <small :class="strengthColor">{{ passwordStrength }}</small>
                   </div>
                   <div class="progress" style="height: 6px;">
-                    <div 
-                      class="progress-bar" 
-                      :class="strengthProgressClass"
-                      :style="{ width: strengthScore + '%' }"
-                    ></div>
+                    <div class="progress-bar" :class="strengthProgressClass" :style="{ width: strengthScore + '%' }">
+                    </div>
                   </div>
-                  
+
                   <!-- Password Requirements -->
                   <div class="mt-2">
                     <small class="d-block" :class="requirements.length ? 'text-success' : 'text-muted'">
@@ -81,19 +69,11 @@
               <div class="mb-4">
                 <label class="form-label">Confirm New Password</label>
                 <div class="input-group">
-                  <input 
-                    :type="showConfirmPassword ? 'text' : 'password'"
-                    v-model="confirmPassword"
-                    class="form-control"
-                    :class="{ 'is-invalid': v$.confirmPassword.$error || passwordMismatch }"
-                    placeholder="Confirm your new password"
-                    @input="checkPasswordMatch"
-                  >
-                  <button 
-                    class="btn btn-outline-secondary" 
-                    type="button"
-                    @click="showConfirmPassword = !showConfirmPassword"
-                  >
+                  <input :type="showConfirmPassword ? 'text' : 'password'" v-model="confirmPassword"
+                    class="form-control" :class="{ 'is-invalid': v$.confirmPassword.$error || passwordMismatch }"
+                    placeholder="Confirm your new password" @input="checkPasswordMatch">
+                  <button class="btn btn-outline-secondary" type="button"
+                    @click="showConfirmPassword = !showConfirmPassword">
                     <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                   </button>
                 </div>
@@ -114,18 +94,12 @@
 
               <!-- Submit Button -->
               <div class="d-grid gap-2">
-                <button 
-                  type="submit" 
-                  class="btn btn-primary"
-                  :disabled="isSubmitting || !isPasswordStrong || v$.$invalid || passwordMismatch"
-                >
+                <button type="submit" class="btn btn-primary"
+                  :disabled="isSubmitting || !isPasswordStrong || v$.$invalid || passwordMismatch">
                   <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
                   {{ isSubmitting ? 'Resetting Password...' : 'Reset Password' }}
                 </button>
-                <RouterLink 
-                  :to="{ name: 'login' }" 
-                  class="btn btn-outline-secondary"
-                >
+                <RouterLink :to="{ name: 'login' }" class="btn btn-outline-secondary">
                   Cancel
                 </RouterLink>
               </div>
@@ -140,9 +114,10 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { resetPassword } from '../helpers/helper'
+import { resetPassword } from '../../helpers/helper'
 import { useVuelidate } from '@vuelidate/core'
 import { required, sameAs, minLength } from '@vuelidate/validators'
+
 
 const route = useRoute()
 const router = useRouter()
@@ -214,11 +189,11 @@ const strengthProgressClass = computed(() => {
 
 // Validation rules
 const rules = computed(() => ({
-  newPassword: { 
+  newPassword: {
     required,
     minLength: minLength(8)
   },
-  confirmPassword: { 
+  confirmPassword: {
     required,
     sameAsPassword: sameAs(newPassword)
   }
@@ -230,21 +205,21 @@ const v$ = useVuelidate(rules, { newPassword, confirmPassword })
 function checkPasswordStrength() {
   const password = newPassword.value
   let score = 0
-  
+
   // Reset requirements
   requirements.length = password.length >= 8
   requirements.uppercase = /[A-Z]/.test(password)
   requirements.lowercase = /[a-z]/.test(password)
   requirements.number = /[0-9]/.test(password)
   requirements.special = /[^A-Za-z0-9]/.test(password)
-  
+
   // Calculate score
   if (requirements.length) score += 20
   if (requirements.uppercase) score += 20
   if (requirements.lowercase) score += 20
   if (requirements.number) score += 20
   if (requirements.special) score += 20
-  
+
   strengthScore.value = score
 }
 
@@ -261,13 +236,13 @@ async function changePassword() {
   successMessage.value = null
 
   try {
-    const response = await resetPassword({ 
-      email: email.value, 
-      newPassword: newPassword.value 
+    const response = await resetPassword({
+      email: email.value,
+      newPassword: newPassword.value
     })
-    
+
     successMessage.value = response.message || 'Password reset successfully! You can now login.'
-    
+
     // Redirect to login page after successful password reset
     setTimeout(() => {
       router.push({ name: 'login' })
@@ -281,54 +256,5 @@ async function changePassword() {
 </script>
 
 <style scoped>
-.progress {
-  background-color: #e9ecef;
-  border-radius: 0.25rem;
-}
-
-.invalid-feedback {
-  display: block;
-}
-
-.card {
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.form-control {
-  border: 2px solid #e9ecef;
-  transition: all 0.2s ease;
-}
-
-.form-control:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.btn {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn:active {
-  transform: translateY(0);
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-.is-invalid {
-  animation: shake 0.2s ease-in-out;
-}
+@import "../../assets/style/auth/ResetPassword.css";
 </style>

@@ -17,7 +17,7 @@
                         <div class="d-flex align-items-center">
                             <div class="conversation-avatar">
                                 <img v-if="conversation.avatar" 
-                                     :src="BASE_URL + conversation.avatar" 
+                                     :src=" conversation.avatar" 
                                      :alt="conversation.username"
                                      class="avatar-image" />
                                 <div v-else class="avatar-placeholder">
@@ -53,7 +53,7 @@
                     <div class="d-flex align-items-center">
                         <div class="conversation-avatar">
                             <img v-if="selectedUser?.avatar" 
-                                 :src="BASE_URL + selectedUser.avatar" 
+                                 :src=" selectedUser.avatar" 
                                  :alt="selectedUser?.username"
                                  class="avatar-image" />
                             <div v-else class="avatar-placeholder">
@@ -73,7 +73,7 @@
                             <div v-if="message.imageUrls && message.imageUrls.length > 0" class="message-images">
                                 <img v-for="imageUrl in message.imageUrls" 
                                      :key="imageUrl" 
-                                     :src="BASE_URL + imageUrl"
+                                     :src=" imageUrl"
                                      class="message-image" />
                             </div>
                             <small class="message-time">{{ formatTimeAgo(message.sent_at.toString()) }}</small>
@@ -135,7 +135,7 @@ import type { Message, conversations } from '../../stores/message'
 
 export default {
     setup() {
-        const BASE_URL = import.meta.env.VITE_API_URI as string;
+    
         const messagesStore = useMessageStore()
         const authStore = useAuthStore()
         const messageDetails = ref<Message[]>([])
@@ -266,7 +266,7 @@ export default {
             onFileChange,
             removeImage,
             getImagePreviewUrl,
-            BASE_URL,
+     
             getInitials
 
         }
@@ -275,205 +275,5 @@ export default {
 </script>
 
 <style scoped>
-.messages-container {
-    height: calc(100vh - 60px);
-    overflow: hidden;
-}
-
-.conversations-column,
-.messages-column {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.message-preview-container {
-    position: relative;
-    width: 100%;
-}
-
-.unread-message {
-    color: #000000;
-    font-weight: bold;
-}
-
-.unread-badge {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #ff4444;
-    color: white;
-    border-radius: 50%;
-    min-width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 0 6px;
-}
-
-.conversations-list {
-    overflow-y: auto;
-    flex-grow: 1;
-}
-
-.conversation-item {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.conversation-item:hover {
-    background-color: #f8f9fa;
-}
-
-.conversation-item.active {
-    background-color: #e9ecef;
-}
-
-.avatar-placeholder {
-    width: 40px;
-    height: 40px;
-    background-color: #e9ecef;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.messages-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.message {
-    max-width: 75%;
-    margin-bottom: 1rem;
-}
-
-.message.received .message-content {
-    background-color: #f0f0f0;
-    padding: 0.75rem;
-    border-radius: 1rem;
-    position: relative;
-}
-
-.message.sent {
-    margin-left: auto;
-}
-
-.message.sent .message-content {
-    background-color: #007bff;
-    color: white;
-    padding: 0.75rem;
-    border-radius: 1rem;
-    position: relative;
-}
-
-.message-time {
-    display: block;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-    opacity: 0.8;
-}
-
-.message-input-container {
-    background-color: white;
-}
-
-.conversation-item.unread {
-    font-weight: bold;
-    color: black;
-}
-
-.font-weight-bold {
-    font-weight: bold;
-}
-message-images {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 0.5rem;
-}
-
-.message-image {
-  max-width: 200px;
-  max-height: 200px;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-  border-radius: 0.5rem;
-}
-
-.message-images-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.image-preview-card {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.preview-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  display: block;
-}
-
-.btn-remove {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-remove:hover {
-  background-color: #dc3545;
-  color: white;
-}
-
-.conversation-avatar {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.avatar-image {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: #f8f9fa;
-}
-
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: #e9ecef;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: #6c757d;
-    font-size: 1rem;
-}
+@import "../../assets/style/message/MessageView.css";
 </style>

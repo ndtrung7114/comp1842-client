@@ -38,7 +38,7 @@ const router = createRouter({
     {
       path: '/create-post',
       name: 'create-post',
-      component: () => import('../components/CreatePost.vue'),
+      component: () => import('../views/post/CreatePost.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -53,17 +53,10 @@ const router = createRouter({
       component: () => import('../views/auth/RegisterView.vue'),
       meta: { requiresGuest: true }
     },
-    // {
-    //   path: '/user',
-    //   name: 'user',
-    //   component: () => import('../views/auth/UserView.vue'),
-    //   meta: { requiresAuth: true }
-    // },
-
     {
       path: '/user/:id',
       name: 'user',
-      component: () => import('../views/auth/UserView.vue'),
+      component: () => import('../views/users/UserView.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -75,19 +68,19 @@ const router = createRouter({
     {
       path: '/verify-otp/:email',
       name: 'verify-otp',
-      component: () => import('../components/VerifyOTP.vue'),
+      component: () => import('../views/auth/VerifyOTP.vue'),
       meta: { requiresGuest: true }
     },
     {
-      path: '/change-password/:email',
-      name: 'change-password',
-      component: () => import('../components/ChangePassword.vue'),
+      path: '/reset-password/:email',
+      name: 'reset-password',
+      component: () => import('../views/auth/ResetPassword.vue'),
       meta: { requiresGuest: true }
     },
     {
       path: '/update-password/:id',
       name: 'update-password',
-      component: () => import('../views/auth/UpdatePasswordView.vue'),
+      component: () => import('../views/users/UpdatePasswordView.vue'),
       meta: { requiresAuth: true }
     },
     {

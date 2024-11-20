@@ -183,7 +183,7 @@
                 
                 <div class="d-flex align-items-center">
                   <img 
-                    :src="BASE_URL +  post.author.profile.avatar || '/default-avatar.png'" 
+                    :src="post.author.profile.avatar || '/default-avatar.png'" 
                     class="rounded-circle me-2"
                     width="24" 
                     height="24" 
@@ -223,7 +223,7 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center mb-3">
                     <img 
-                      :src="BASE_URL + user.profile.avatar || '/default-avatar.png'" 
+                      :src="user.profile.avatar || '/default-avatar.png'" 
                       class="rounded-circle me-3"
                       width="48" 
                       height="48" 
@@ -273,7 +273,7 @@
   import { useDebounce } from '@vueuse/core'
   import { useSearchStore } from '@/stores/search'
   
-  const BASE_URL = import.meta.env.VITE_API_URI as string;
+ 
   const route = useRoute()
   const router = useRouter()
   const searchStore = useSearchStore()

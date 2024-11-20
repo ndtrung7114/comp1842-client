@@ -6,8 +6,10 @@ import { useAuthStore } from '../stores/auth';
 import { useMessageStore } from '@/stores/message';
 import { watch } from 'vue';
 
+const socketUrl = import.meta.env.VITE_API_URI as string;
 
-export const socket = io('https://greenwichsocial.onrender.com', {
+
+export const socket = io(socketUrl, {
   withCredentials: true,
   autoConnect: true,
   transports: ['polling', 'websocket']
@@ -100,6 +102,7 @@ export const socketPlugin = {
 
    socket.on('postLiked', (notification) => {
         const notificationsStore = useNotificationsStore();
+        if (authStore.user.user._id != notification.sender) {
          notificationsStore.addNotification({
           _id: notification._id,
           receiver: notification.receiver,
@@ -122,10 +125,13 @@ export const socketPlugin = {
           created_at: new Date(notification.created_at),
         });
         console.log('Updated notifications:', notificationsStore.notifications);
+      }
       });
+      
 
       socket.on('newComment', (notification) => {
         const notificationsStore = useNotificationsStore();
+        if (authStore.user.user._id != notification.sender) {
          notificationsStore.addNotification({
           _id: notification._id,
           receiver: notification.receiver,
@@ -148,6 +154,7 @@ export const socketPlugin = {
           created_at: new Date(notification.created_at),
         });
         console.log('Updated notifications:', notificationsStore.notifications);
+      }
       });
 
 

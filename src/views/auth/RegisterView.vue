@@ -308,48 +308,5 @@ async function submit() {
 </script>
 
 <style scoped>
-#register {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
-
-.card {
-  max-width: 1000px;
-  margin: auto;
-  border: none;
-}
-
-.bg-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-}
-
-.progress {
-  background-color: #e9ecef;
-  border-radius: 0.25rem;
-}
-
-.form-control:focus {
-  border-color: #4361ee;
-  box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
-}
-
-.btn-primary:disabled {
-  background: #ccc;
-}
-
-@media (max-width: 768px) {
-  .card {
-    margin: 1rem;
-  }
-}
+@import "../../assets/style/auth/RegisterView.css";
 </style>

@@ -125,8 +125,9 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { usePostsStore } from '../stores/posts';
+import { usePostsStore } from '../../stores/posts';
 import { useRouter } from 'vue-router';
+
 
 export default defineComponent({
   setup() {
@@ -191,83 +192,8 @@ export default defineComponent({
 });
 </script>
 
+
 <style scoped>
-.card {
-  border: none;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-.upload-box {
-  border: 2px dashed #dee2e6;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.upload-box:hover {
-  border-color: #0d6efd;
-  background-color: #f8f9fa;
-}
-
-.upload-label {
-  cursor: pointer;
-  display: block;
-}
-
-.image-preview-card {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.preview-image {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  display: block;
-}
-
-.btn-remove {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-remove:hover {
-  background-color: #dc3545;
-  color: white;
-}
-
-.form-control {
-  border: 2px solid #dee2e6;
-  padding: 0.75rem;
-  transition: all 0.2s ease;
-}
-
-.form-control:focus {
-  border-color: #0d6efd;
-  box-shadow: none;
-}
-
-.btn-primary {
-  padding: 12px 24px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.card-header {
-  background: linear-gradient(45deg, #0d6efd, #0a58ca);
-}
+@import "../../assets/style/post/CreatePost.css";
 </style>
+

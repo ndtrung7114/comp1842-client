@@ -32,7 +32,7 @@
                             :class="['image-gallery', post.imageUrls.length === 1 ? 'single-image-gallery' : 'multi-image-gallery']">
                             <div v-for="(imageUrl, index) in post.imageUrls.slice(0, 4)" :key="index"
                                 class="image-container zoom-effect" @click="viewImage(imageUrl)">
-                                <img :src="BASE_URL + imageUrl" alt="Post Image" class="img-fluid rounded shadow-sm" />
+                                <img :src="imageUrl" alt="Post Image" class="img-fluid rounded shadow-sm" />
                                 <div class="image-overlay">
                                     <span class="zoom-icon">🔍</span>
                                 </div>
@@ -47,9 +47,13 @@
 
                     <div class="post-meta text-muted mb-3 slide-up">
                         <div class="author-info">
-                            <div class="author-avatar">{{ post.username[0].toUpperCase() }}</div>
+                            <div class="author-avatar">
+                                <img :src="post.author?.profile.avatar || '/path/to/default-avatar.png'"
+                                        :alt="post.username + '\'s avatar'" class="avatar-image" />
+                            </div>
                             <div class="author-details">
-                                <p>By <strong>{{ post.username }}</strong></p>
+                                <router-link :to="{ name: 'user', params: { id: post.authorId } }" class="router-link"> <strong> {{ post.author?.username }} </strong></router-link>
+            
                                 <p>Posted on {{ new Date(post.createdAt).toLocaleDateString() }}</p>
                             </div>
                         </div>
@@ -67,8 +71,12 @@
                         class="comment-item p-3 mb-3 border rounded bg-light">
                         <div class="comment-header">
                             <div class="comment-author">
-                                <div class="comment-avatar">{{ }}</div>
-                                <strong>{{ comment.username }}</strong>
+                                <div class="comment-avatar">
+                                    <img :src="comment.avatar || '/path/to/default-avatar.png'"
+                                        :alt="comment.username + '\'s avatar'" class="avatar-image" />
+                                </div>
+                                <router-link :to="{ name: 'user', params: { id: comment.userId } }" class="router-link"> <strong> {{ comment.username }} </strong></router-link>
+                               
                             </div>
                         </div>
 
@@ -132,22 +140,32 @@
                 </div>
             </div>
         </div>
+        <Notification v-if="notification" :message="notification" :notificationType="notificationType" />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue';
+import { defineComponent, onMounted, ref, computed, watch } from 'vue';
+import { useNotificationsStore } from '@/stores/notifications'
 import { usePostsStore } from '../../stores/posts';
 import { useAuthStore } from '@/stores/auth';
 import { useCommentsStore } from '../../stores/comments';
 import { useRoute, useRouter } from 'vue-router';
+import Notification from '../../components/Notification.vue'
 
 export default defineComponent({
+    components: {
+        Notification
+    },
     setup() {
-        const BASE_URL = import.meta.env.VITE_API_URI as string;
+
         const authStore = useAuthStore();
         const postsStore = usePostsStore();
         const commentsStore = useCommentsStore();
+        const notificationsStore = useNotificationsStore()
+
+        const notification = ref<string | null>(null)
+        const notificationType = ref<string>('info') // Default notification type
         const route = useRoute();
         const router = useRouter();
 
@@ -163,7 +181,7 @@ export default defineComponent({
 
         const currentImageUrl = computed(() => {
             if (!post.value?.imageUrls) return '';
-            return BASE_URL + post.value.imageUrls[selectedImageIndex.value];
+            return post.value.imageUrls[selectedImageIndex.value];
         });
 
         // Comments state
@@ -275,6 +293,24 @@ export default defineComponent({
             }
         };
 
+        // Watch for changes in notifications
+        watch(
+            () => notificationsStore.notifications,
+            (newNotifications) => {
+                if (newNotifications.length > 0) {
+                    const latestNotification = newNotifications[newNotifications.length - 1]
+                    notification.value = latestNotification.message
+                    notificationType.value = latestNotification.type
+
+                    // Clear notification after 3 seconds
+                    setTimeout(() => {
+                        notification.value = null
+                    }, 2000)
+                }
+            },
+            { deep: true }
+        )
+
         return {
             post,
             loading,
@@ -291,7 +327,6 @@ export default defineComponent({
             cancelEdit,
             saveComment,
             deleteComment,
-            BASE_URL,
             // Lightbox returns
             selectedImageIndex,
             isLightboxVisible,
@@ -300,408 +335,14 @@ export default defineComponent({
             closeLightbox,
             previousImage,
             nextImage,
+            notification,
+            notificationType
         };
     }
 });
 </script>
 
+
 <style scoped>
-/* Animations */
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
-}
-
-.fade-in-delay {
-    animation: fadeIn 0.8s ease-in;
-}
-
-.fade-in-up {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-.slide-in {
-    animation: slideIn 0.4s ease-out;
-}
-
-.slide-up {
-    animation: slideUp 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* General Styles */
-.spinner-lg {
-    width: 3rem;
-    height: 3rem;
-}
-
-.shadow-hover {
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.shadow-hover:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
-
-.gradient-text {
-    background: linear-gradient(45deg, #2196F3, #4CAF50);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.section-title {
-    position: relative;
-    padding-left: 15px;
-    border-left: 4px solid #2196F3;
-}
-
-/* Button Styles */
-.btn-hover {
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.btn-hover::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-}
-
-.btn-hover:hover::after {
-    transform: translateX(0);
-}
-
-/* Image Gallery */
-.image-gallery-container {
-    margin: 20px 0;
-}
-
-.image-gallery-container.single-image {
-    display: flex;
-    justify-content: center;
-}
-
-.image-gallery.single-image-gallery {
-    max-width: 500px;
-    /* Adjust width as necessary */
-    margin: 0 auto;
-}
-
-.image-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.image-container {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    aspect-ratio: 16/9;
-}
-
-.zoom-effect {
-    transition: transform 0.3s ease;
-}
-
-.zoom-effect:hover {
-    transform: scale(1.05);
-}
-
-.image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.image-container:hover .image-overlay {
-    opacity: 1;
-}
-
-.zoom-icon {
-    color: white;
-    font-size: 24px;
-}
-
-.more-images {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-}
-
-/* Author & Comment Styles */
-.author-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.author-avatar,
-.comment-avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(45deg, #2196F3, #4CAF50);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-}
-
-.comment-avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 0.875rem;
-}
-
-.comment-item {
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-}
-
-.comment-item:hover {
-    border-left-color: #2196F3;
-    transform: translateX(5px);
-}
-
-.comment-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.comment-content {
-    line-height: 1.6;
-    margin: 10px 0;
-}
-
-.comment-actions {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.comment-item:hover .comment-actions {
-    opacity: 1;
-}
-
-/* Form Styles */
-.custom-input {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    background: #f8f9fa;
-}
-
-.custom-input:focus {
-    border-color: #2196F3;
-    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
-    background: white;
-}
-
-.comment-form-container {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* Hover Effects */
-.hover-highlight {
-    transition: background-color 0.3s ease;
-}
-
-.hover-highlight:hover {
-    background-color: #f8f9fa;
-}
-
-/* Line Height */
-.line-height-custom {
-    line-height: 1.8;
-}
-
-/* Shine Effect */
-.shine-effect {
-    position: relative;
-    overflow: hidden;
-}
-
-.shine-effect::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(to bottom right,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.1) 50%,
-            rgba(255, 255, 255, 0) 100%);
-    transform: rotate(45deg);
-    animation: shine 3s infinite;
-}
-
-@keyframes shine {
-    0% {
-        transform: translateX(-100%) rotate(45deg);
-    }
-
-    100% {
-        transform: translateX(100%) rotate(45deg);
-    }
-}
-
-.lightbox-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.lightbox-content {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-}
-
-.lightbox-image {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-}
-
-.close-button {
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1001;
-}
-
-.navigation-controls {
-    position: absolute;
-    bottom: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-button {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 10px;
-    transition: opacity 0.3s ease;
-}
-
-.nav-button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.image-counter {
-    color: white;
-    font-size: 1rem;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
+@import "../../assets/style/post/PostDetail.css";
 </style>

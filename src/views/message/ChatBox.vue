@@ -86,8 +86,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../../stores/auth';
 import { useMessageStore } from '@/stores/message'
+
 
 const authStore = useAuthStore();
 const messagesStore = useMessageStore()
@@ -174,68 +175,8 @@ const handleSend = async () => {
 };
 </script>
 
+
 <style scoped>
-.chat-box-container {
-  position: fixed;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 320px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1050;
-}
-
-.chat-box-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid #dee2e6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chat-box-body {
-  padding: 16px;
-}
-
-.message-input-container textarea {
-  resize: none;
-  font-size: 14px;
-}
-
-.preview-image {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-
-.upload-btn-wrapper input[type=file] {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-}
-
-/* Transition animations */
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.3s ease;
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(-20px) translateY(-50%);
-  opacity: 0;
-}
+@import "../../assets/style/message/ChatBox.css";
 </style>
+

@@ -7,15 +7,8 @@
           <div class="mb-3">
             <label for="otp" class="form-label text-center w-100">Enter OTP</label>
             <div class="otp-inputs d-flex justify-content-center gap-3">
-              <input
-                v-for="(value, index) in otp"
-                :key="index"
-                v-model="otp[index]"
-                type="text"
-                class="form-control otp-box shadow-sm text-center"
-                maxlength="1"
-                @input="focusNext(index)"
-              />
+              <input v-for="(value, index) in otp" :key="index" v-model="otp[index]" type="text"
+                class="form-control otp-box shadow-sm text-center" maxlength="1" @input="focusNext(index)" />
             </div>
           </div>
           <div v-if="errorMessage" class="alert alert-danger shadow-sm">
@@ -35,8 +28,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { verifyOtp } from "../helpers/helper";
+import { verifyOtp } from "../../helpers/helper";
 import { useRouter, useRoute } from "vue-router";
+
 
 const route = useRoute();
 const router = useRouter();
@@ -63,7 +57,7 @@ async function verifyOTP() {
     errorMessage.value = null;
 
     setTimeout(() => {
-      router.push({ name: "change-password", params: { email: email.value } });
+      router.push({ name: "reset-password", params: { email: email.value } });
     }, 2000);
   } catch (error: any) {
     errorMessage.value = error || "An error occurred while verifying the OTP.";
@@ -71,44 +65,6 @@ async function verifyOTP() {
   }
 }
 </script>
-
 <style scoped>
-#verify-otp {
-  background-color: #f8f9fa;
-  min-height: 100vh;
-}
-
-.card {
-  animation: fadeIn 0.6s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.otp-inputs {
-  gap: 0.5rem;
-}
-
-.otp-box {
-  width: 50px;
-  height: 50px;
-  font-size: 1.5rem;
-  text-align: center;
-  border: 2px solid #ddd;
-  border-radius: 0.5rem;
-  transition: border-color 0.2s ease-in-out;
-}
-
-.otp-box:focus {
-  border-color: #007bff;
-  outline: none;
-}
+@import "../../assets/style/auth/VerifyOTP.css";
 </style>

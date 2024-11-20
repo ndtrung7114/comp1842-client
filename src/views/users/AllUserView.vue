@@ -143,18 +143,29 @@
       {{ error }}
       <button type="button" class="btn-close" @click="error = ''" aria-label="Close"></button>
     </div>
+    
   </div>
+  <Notification
+      v-if="notification"
+      :message="notification"
+      :notificationType="notificationType"
+    />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent, ref, computed, onMounted, watch } from 'vue'
 import { useAuthStore } from '../../stores/auth'
 import { useRouter } from 'vue-router'
 import type { User } from '../../stores/auth'
-const BASE_URL = import.meta.env.VITE_API_URI as string
+import { useNotificationsStore } from '@/stores/notifications'
+import Notification from '../../components/Notification.vue'
+
 
 export default defineComponent({
   name: 'AllUserView',
+  components: {
+    Notification
+  },
   setup() {
     const authStore = useAuthStore()
     const router = useRouter()
@@ -163,12 +174,32 @@ export default defineComponent({
     const error = ref('')
     const searchQuery = ref('')
     const roleFilter = ref('')
+    const notificationsStore = useNotificationsStore()
+    const notification = ref<string | null>(null)
+    const notificationType = ref<string>('info') // Default notification type
+
+    watch(
+      () => notificationsStore.notifications,
+      (newNotifications) => {
+        if (newNotifications.length > 0) {
+          const latestNotification = newNotifications[newNotifications.length - 1]
+          notification.value = latestNotification.message
+          notificationType.value = latestNotification.type
+
+          // Clear notification after 3 seconds
+          setTimeout(() => {
+            notification.value = null
+          }, 2000)
+        }
+      },
+      { deep: true }
+    )
 
     const getAvatarUrl = (avatarPath: string | undefined) => {
       if (!avatarPath) return '/default-avatar.png';
       // Remove leading slash if it exists to avoid double slashes
       const cleanPath = avatarPath.startsWith('/') ? avatarPath.slice(1) : avatarPath;
-      return `${BASE_URL}/${cleanPath}`;
+      return `${cleanPath}`;
     };
 
     const loadUsers = async () => {
@@ -224,63 +255,14 @@ export default defineComponent({
       handleBanUser,
       viewUserProfile,
       loadUsers,
-      getAvatarUrl
+      getAvatarUrl,
+      notification,
+      notificationType
     }
   }
 })
 </script>
 
 <style scoped>
-/* Custom styles for Vue 3 + Bootstrap 5 */
-.bg-purple {
-  background-color: #6f42c1;
-}
-
-.card {
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Table header styles */
-.table thead th {
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  border-top: none;
-}
-
-/* Badge styles */
-.badge {
-  padding: 0.5em 0.75em;
-  font-weight: 500;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .container-fluid {
-    padding: 1rem;
-  }
-}
-
-.rounded-circle {
-  object-fit: cover;
-  border: 2px solid #eee;
-  background-color: #f8f9fa;
-  /* Light background for images that are loading */
-}
-
-/* Add a smooth transition for image load */
-img {
-  transition: opacity 0.3s ease;
-}
-
-img[src='/default-avatar.png'] {
-  opacity: 0.5;
-  /* Make default avatar slightly transparent */
-}
+@import "../../assets/style/user/AllUserView.css";
 </style>

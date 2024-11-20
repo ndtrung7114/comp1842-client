@@ -112,6 +112,14 @@ export const usePostsStore = defineStore('posts', {
                     body: data.post.body,
                     username: data.post.author.username,
                     authorId: data.post.author._id,
+                    author: {
+                        _id: data.post.author._id,
+                        username: data.post.author.username,
+                        profile: {
+                            avatar: data.post.author.profile?.avatar || '',
+                            facebook: data.post.author.profile?.facebook || ''
+                        }
+                    },
                     createdAt: data.post.createdAt,
                     updatedAt: data.post.updatedAt,
                     imageUrls: data.post.imageUrls,

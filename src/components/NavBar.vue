@@ -77,7 +77,7 @@
                 <template v-else>
                   <div class="d-flex align-items-center">
                     <img
-                      :src="BASE_URL + result.profile.avatar || '/default-avatar.png'"
+                      :src=" result.profile.avatar || '/default-avatar.png'"
                       class="rounded-circle me-2 search-avatar"
                       width="32"
                       height="32"
@@ -172,7 +172,7 @@
                 aria-expanded="false"
               >
                 <img
-                  :src="BASE_URL + user.user.profile?.avatar || '/default-avatar.png'"
+                  :src="user.user.profile?.avatar || '/default-avatar.png'"
                   class="rounded-circle me-2"
                   width="32"
                   height="32"
@@ -225,7 +225,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useDebounce } from '@vueuse/core'
 import { useSearchStore } from '@/stores/search'
 
-const BASE_URL = import.meta.env.VITE_API_URI as string
+
+
 
 const messagesStore = useMessageStore()
 const authStore = useAuthStore()
@@ -337,130 +338,4 @@ async function logout() {
 }
 </script>
 
-<style scoped>
-.custom-navbar {
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.hover-underline {
-  position: relative;
-}
-
-.hover-underline::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--bs-primary);
-  transition: width 0.3s ease-in-out;
-}
-
-.hover-underline:hover::after {
-  width: 100%;
-}
-
-.search-input {
-  border-radius: 20px 0 0 20px;
-  border: 1px solid #dee2e6;
-  padding-left: 1rem;
-}
-
-.search-input:focus {
-  box-shadow: none;
-  border-color: var(--bs-primary);
-}
-
-.search-suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 0.5rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  z-index: 1000;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.search-icon-wrapper {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f8f9fa;
-  border-radius: 50%;
-}
-
-.search-avatar {
-  object-fit: cover;
-}
-
-.notification-icon, .message-icon {
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-}
-
-.notification-icon:hover, .message-icon:hover {
-  background-color: rgba(var(--bs-primary-rgb), 0.1);
-}
-
-.notification-badge, .message-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(25%, -25%);
-  background-color: var(--bs-danger);
-  color: white;
-  border-radius: 50%;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  min-width: 18px;
-  text-align: center;
-}
-
-.notification-dropdown {
-  width: 320px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.notification-item:hover {
-  background-color: #f8f9fa;
-}
-
-.profile-dropdown {
-  min-width: 200px;
-}
-
-.username {
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.view-all:hover {
-  background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-  .search-container {
-    width: 100%;
-    margin: 1rem 0;
-  }
-  
-  .notification-dropdown {
-    width: 100%;
-    max-width: none;
-  }
-}
-</style>
+<style src="../assets/style/component/NavBar.css"></style>

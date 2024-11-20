@@ -1,0 +1,52 @@
+/* Custom styles for Vue 3 + Bootstrap 5 */
+.bg-purple {
+    background-color: #6f42c1;
+  }
+  
+  .card {
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  /* Table header styles */
+  .table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-top: none;
+  }
+  
+  /* Badge styles */
+  .badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .container-fluid {
+      padding: 1rem;
+    }
+  }
+  
+  .rounded-circle {
+    object-fit: cover;
+    border: 2px solid #eee;
+    background-color: #f8f9fa;
+    /* Light background for images that are loading */
+  }
+  
+  /* Add a smooth transition for image load */
+  img {
+    transition: opacity 0.3s ease;
+  }
+  
+  img[src='/default-avatar.png'] {
+    opacity: 0.5;
+    /* Make default avatar slightly transparent */
+  }
