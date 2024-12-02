@@ -307,8 +307,15 @@ onMounted(async () => {
     await notificationsStore.getNotificationForUser()
     // Fetch messages - add this
     await messagesStore.getAllMessages()
+    
   }
 })
+
+watch(() => authStore.isAuthenticated, async (newValue) => {
+  if (newValue) {
+    await messagesStore.getAllMessages()
+  }
+}, { immediate: true })
 
 const unreadNotificationsCount = computed(() => notificationsStore.unreadNotificationsCount)
 
