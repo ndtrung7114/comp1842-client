@@ -320,11 +320,11 @@ const notificationsStore = useNotificationsStore()
 import { useNotificationsStore } from '@/stores/notifications'
 import Notification from '../../components/Notification.vue'
 
-const notification = ref<string | null>(null)
+const notification = ref<string | null>(null) // Notification message
 const notificationType = ref<string>('info') // Default notification type
-const authStore = useAuthStore();
-const postStore = usePostsStore();
-const route = useRoute();
+const authStore = useAuthStore(); // Auth store
+const postStore = usePostsStore(); // Post store
+const route = useRoute(); // Vue Router route
 
 const userId = computed(() => route.params.id as string);
 const userIdIsLogged = computed(() => authStore.user.user?._id);

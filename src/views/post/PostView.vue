@@ -253,10 +253,12 @@ export default defineComponent({
   setup() {
  
     const postsStore = usePostsStore()
-    const userStore = useAuthStore()
     const notificationsStore = useNotificationsStore()
+    // Get user details from the auth store
+    const userStore = useAuthStore()
     const userId = userStore.userDetail.user._id
-    const notification = ref<string | null>(null)
+    
+    const notification = ref<string | null>(null) // reactive variable to store notification message
     const notificationType = ref<string>('info') // Default notification type
 
     // Changed selectedImageUrl to be `string | undefined`

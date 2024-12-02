@@ -1,8 +1,7 @@
 import axios from "axios"
 
 axios.defaults.withCredentials = true;
-const BASE_URL = import.meta.env.VITE_API_URI;
-
+// axios defaults are shared between all instances
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URI,
   withCredentials: true,
@@ -11,6 +10,7 @@ export const axiosInstance = axios.create({
   }
 })
 
+// axios private instance
 export const axiosPrivateInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URI,
   withCredentials: true,

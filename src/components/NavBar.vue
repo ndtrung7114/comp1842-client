@@ -305,6 +305,8 @@ const isAuthenticated = computed(() => {
 onMounted(async () => {
   if (authStore.isAuthenticated) {
     await notificationsStore.getNotificationForUser()
+    // Fetch messages - add this
+    await messagesStore.getAllMessages()
   }
 })
 
@@ -319,12 +321,13 @@ async function openNotifications() {
 
 // Check if the user is outside the messages page
 const isOutsideMessagesPage = computed(() => route.name !== 'messages')
+// Fetch all messages initially
+messagesStore.getAllMessages()
 
 // Computed property for unread conversations count from the store
 const unreadConversationsCount = computed(() => messagesStore.unreadConversationsCount)
 
-// Fetch all messages initially
-messagesStore.getAllMessages()
+
 
 async function logout() {
   await authStore

@@ -24,9 +24,8 @@ export const socketPlugin = {
     const messageStore = useMessageStore();
     const notificationsStore = useNotificationsStore();
 
+    // Listen for new messages
     socket.on('receiveMessage', (message) => {
-      // Add the message to the message store
-      
       // Update the message store with the new message
       messageStore.updateConversation(message);
       

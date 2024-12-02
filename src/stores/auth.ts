@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useApi, useApiPrivate } from '../composables/useApi'
 import { socket } from '@/plugins/socket' // Import the socket instance
 
+// Define the user object structure
 export interface User {
   user: {
     _id: string
@@ -103,6 +104,7 @@ export const useAuthStore = defineStore('auth', {
     //login action
     async login(payload: LoginData) {
       try {
+        // useApi() is a function that returns the public axios instance
         const { data } = await useApi().post(`/api/auth/login`, payload)
         this.accessToken = data.access_token
         await this.getUser()
@@ -138,6 +140,7 @@ export const useAuthStore = defineStore('auth', {
 
     async getUser() {
       try {
+        // Fetch the user data from the backend with the private axios instance
         const { data } = await useApiPrivate().get(`/api/auth/user`)
         // Dynamically assign the role document to the state
         this.user = data
