@@ -1,7 +1,5 @@
 // src/stores/message.ts
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { useSocket } from '@/plugins/socket'
 import { useApi, useApiPrivate } from '../composables/useApi'
 
 export interface Message {

@@ -208,7 +208,7 @@ export default defineComponent({
         const response = await authStore.loadAllUser()
         users.value = response
       } catch (err: any) {
-        error.value = err.message || 'Failed to load users'
+        error.value = err;
       } finally {
         loading.value = false
       }

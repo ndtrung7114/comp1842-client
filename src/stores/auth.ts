@@ -249,7 +249,7 @@ export const useAuthStore = defineStore('auth', {
         const { data } = await useApiPrivate().get(`/api/admin/loadAllUser`)
         return data
       } catch (error: Error | any) {
-        throw error.message
+        throw error.response?.data?.message || error.message;
       }
     }
   }
